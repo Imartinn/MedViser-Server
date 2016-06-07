@@ -1,0 +1,12 @@
+CREATE database dbMedViserData;
+CREATE TABLE users (idUser int primary key auto_increment not null, mail char(40) not null, password char(40) not null, UNIQUE (mail));
+
+CREATE TABLE meds ( idUser integer not null, idMed integer primary key auto_increment not null, nombre varchar(30) not null,
+            detalles varchar(30) not null, enActivo bit not null );
+
+CREATE TABLE tomas ( idUser integer not null, idToma integer primary key auto_increment not null, idMed integer not null, lunes bit not null, martes bit not null, miercoles bit not null, jueves bit not null,viernes bit not null, sabado bit not null, domingo bit not null, detalles varchar(30) not null, hora time not null, foreign key (idMed) references meds(idMed));
+
+CREATE TABLE registros ( idUser integer not null, idReg integer primary key not null, idMed integer not null, idToma int not null, horaToma time not null, fechaRegistro long not null, estadoToma integer not null, foreign key (idMed) references meds(idMed));
+
+CREATE TABLE estados (idEstado integer primary key not null, nombreEstado varchar(20) not null);
+
