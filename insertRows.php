@@ -6,8 +6,8 @@
   $contents = utf8_encode($contents);
   $results = json_decode($contents); 
   $input = json_decode($contents);
-  $data = $input->{"data"};  
-  echo $data->{"nombre"};  
+  $data = array($input->{"data"});  
+  //echo $data->{"nombre"};  
   //$data = json_decode($contents, true, 1, 0);
 
   $userID = comprobarCredenciales($input);
@@ -36,7 +36,9 @@
       case 'meds':
         $sql = "";
         foreach($data as $json) {
-           $sql += "INSERT INTO meds VALUES(default,".$userID.",".mysqli_real_escape_string($link, $json->{'idMed'}).",".mysqli_real_escape_string($link, $json->{'nombre'}).",".mysqli_real_escape_string($link, $json->{'detalles'}).",".mysqli_real_escape_string($link, $json->{'enActivo'})."); "; // you can access your key value like this if result is array
+          echo $json->{'idMed'};
+          $sql."INSERT INTO meds VALUES(default,".$userID.",".mysqli_real_escape_string($link, $json->{'idMed'}).",".mysqli_real_escape_string($link, $json->{'nombre'}).",".mysqli_real_escape_string($link, $json->{'detalles'}).",".mysqli_real_escape_string($link, $json->{'enActivo'})."); "; // you can access your key value like this if result is array
+          die($sql);
            //echo $json->key; // you can access your key value like this if result is object
         }        
         break;
