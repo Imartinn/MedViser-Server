@@ -55,7 +55,8 @@
         }
       } 
       mysqli_close($link);
-      echo json_encode($rows);
+
+      echo json_encode(array("last:" => intval($rows[0])));
     } else {
       http_response_code(500);
       die("NOK; Database error");  
