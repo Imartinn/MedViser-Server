@@ -61,7 +61,7 @@ die();*/
       case 'registros':
       	$sql .= "DELETE FROM registros WHERE idUser =".$userID.";";
       	foreach($data as $json) {
-        	$sql = $sql."INSERT INTO registros VALUES(default,".$userID.",".mysqli_real_escape_string($link, $json->{'idReg'}).",".mysqli_real_escape_string($link, $json->{'idMed'}).",".mysqli_real_escape_string($link, $json->{'idToma'}).",'".mysqli_real_escape_string($link, $json->{'horaToma'})."',".mysqli_real_escape_string($link, $json->{'fechaRegistro'}).",".mysqli_real_escape_string($link, $json->{'estadoToma'})."); ";
+        	$sql = $sql."INSERT INTO registros VALUES(".$userID.",".mysqli_real_escape_string($link, $json->{'idReg'}).",".mysqli_real_escape_string($link, $json->{'idMed'}).",".mysqli_real_escape_string($link, $json->{'idToma'}).",'".mysqli_real_escape_string($link, $json->{'horaToma'})."',".mysqli_real_escape_string($link, $json->{'fechaRegistro'}).",".mysqli_real_escape_string($link, $json->{'estadoToma'})."); ";
     	}
         break;
       default:
