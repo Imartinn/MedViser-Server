@@ -6,7 +6,17 @@
   $contents = utf8_encode($contents);
   $results = json_decode($contents); 
   $input = json_decode($contents);
-  $data = json_decode($input->{"data"});  
+  $data = json_decode($input->{"data"});
+  
+
+	var_dump($data);
+
+/*  foreach($preData as $json) {          
+    var_dump($json);
+    $data[] = (json_decode($json));    
+  }
+    var_dump($input);
+die();*/
   //echo $data->{"nombre"};  
   //$data = json_decode($contents, true, 1, 0);
 
@@ -34,17 +44,25 @@
     $sql = "";
     // create SQL based on HTTP method    
     switch ($wanted) {
-      case 'meds':        
-        foreach($data as $json) {          
-          $sql = $sql."INSERT INTO meds VALUES(".$userID.",".mysqli_real_escape_string($link, $json->{'idMed'}).",'".mysqli_real_escape_string($link, $json->{'nombre'})."','".mysqli_real_escape_string($link, $json->{'detalles'})."',".mysqli_real_escape_string($link, $json->{'enActivo'})."); "; // you can access your key value like this if result 
+      case 'meds':
+      	$sql .= "DELETE FROM meds WHERE idUser =".$userID.";";
+        foreach($data as $json) {
+          $sql = $sql."INSERT INTO meds VALUES(".$userID.",".mysqli_real_escape_string($link, $json->{'idMed'}).",'".mysqli_real_escape_string($link, $json->{'nombre'})."','".mysqli_real_escape_string($link, $json->{'detalles'})."',".mysqli_real_escape_string($link, $json->{'enActivo'}).");"; // you can access your key value like this if result 
            //echo $json->key; // you can access your key value like this if result is object
-        }        
+        }             
         break;
       case 'tomas':
-        $sql = $sql."INSERT INTO tomas VALUES(".$userID.",".mysqli_real_escape_string($link, $json->{'idToma'}).",".mysqli_real_escape_string($link, $json->{'idMed'}).",".mysqli_real_escape_string($link, $json->{'lunes'}).",".mysqli_real_escape_string($link, $json->{'martes'}).",".mysqli_real_escape_string($link, $json->{'miercoles'}).",".mysqli_real_escape_string($link, $json->{'jueves'}).",".mysqli_real_escape_string($link, $json->{'viernes'}).",".mysqli_real_escape_string($link, $json->{'sabado'}).",".mysqli_real_escape_string($link, $json->{'domingo'}).",'".mysqli_real_escape_string($link, $json->{'detalles'})."','".mysqli_real_escape_string($link, $json->{'hora'})."'); ";
+      	$sql .= "DELETE FROM tomas WHERE idUser =".$userID.";";
+      	foreach($data as $json) {
+        	$sql = $sql."INSERT INTO tomas VALUES(".$userID.",".mysqli_real_escape_string($link, $json->{'idToma'}).",".mysqli_real_escape_string($link, $json->{'idMed'}).",".mysqli_real_escape_string($link, $json->{'lunes'}).",".mysqli_real_escape_string($link, $json->{'martes'}).",".mysqli_real_escape_string($link, $json->{'miercoles'}).",".mysqli_real_escape_string($link, $json->{'jueves'}).",".mysqli_real_escape_string($link, $json->{'viernes'}).",".mysqli_real_escape_string($link, $json->{'sabado'}).",".mysqli_real_escape_string($link, $json->{'domingo'}).",'".mysqli_real_escape_string($link, $json->{'detalles'})."','".mysqli_real_escape_string($link, $json->{'hora'})."',".mysqli_real_escape_string($link, $json->{'enActivo'})."); ";
+    	}
+    	var_dump($sql);
         break;
-      case 'regs':
-        $sql = $sql."INSERT INTO registros VALUES(default,".$userID.",".mysqli_real_escape_string($link, $json->{'idReg'}).",".mysqli_real_escape_string($link, $json->{'idMed'}).",".mysqli_real_escape_string($link, $json->{'idToma'}).",'".mysqli_real_escape_string($link, $json->{'horaToma'})."',".mysqli_real_escape_string($link, $json->{'fechaRegistro'}).",".mysqli_real_escape_string($link, $json->{'estadoToma'})."); ";
+      case 'registros':
+      	$sql .= "DELETE FROM registros WHERE idUser =".$userID.";";
+      	foreach($data as $json) {
+        	$sql = $sql."INSERT INTO registros VALUES(default,".$userID.",".mysqli_real_escape_string($link, $json->{'idReg'}).",".mysqli_real_escape_string($link, $json->{'idMed'}).",".mysqli_real_escape_string($link, $json->{'idToma'}).",'".mysqli_real_escape_string($link, $json->{'horaToma'})."',".mysqli_real_escape_string($link, $json->{'fechaRegistro'}).",".mysqli_real_escape_string($link, $json->{'estadoToma'})."); ";
+    	}
         break;
       default:
         http_response_code(400);
@@ -53,8 +71,8 @@
     }
      
     // excecute SQL statement
-    if (mysqli_query($link, $sql)) {
-      echo "New record created successfully";
+    if (mysqli_multi_query($link, $sql)) {
+      echo "OK; New records created successfully";
     } else {
       http_response_code(500);
       echo "NOK; Error: " . $sql . "<br>" . mysqli_error($link);
@@ -66,8 +84,8 @@
     http_response_code(500);
     die("NOK; Server error");
   }
-  /*{"user":"rootrootrootrootrootrootrootrootrootroot","pass":"rootrootrootrootrootrootrootrootrootroot", "wanted":"meds", "data":{"idMed":4, "nombre":"Valid", "detalles":"Muy bueno pa to", "enActivo":1}}
+  /*{"user":"rootrootrootrootrootrootrootrootrootroot","pass":"rootrootrootrootrootrootrootrootrootroot", "wanted":"meds", "data":[{"idMed":5, "nombre":"Valid", "detalles":"Muy bueno pa to", "enActivo":1}]}
 
-  {"user":"rootrootrootrootrootrootrootrootrootroot","pass":"rootrootrootrootrootrootrootrootrootroot", "wanted":"meds", "data":{"idMed":3,"nombre":"Lora", "detalles":"Good", "enActivo":1},{"idMed":4,"nombre":"Norepinefrina", "detalles":"WAKE UP", "enActivo":1} }*/
+  {"user":"rootrootrootrootrootrootrootrootrootroot","pass":"rootrootrootrootrootrootrootrootrootroot", "wanted":"meds", "data":[{"idMed":3,"nombre":"Lora", "detalles":"Good", "enActivo":1},{"idMed":4,"nombre":"Norepinefrina", "detalles":"WAKE UP", "enActivo":1}] } */
 ?>
  

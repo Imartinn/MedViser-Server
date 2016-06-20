@@ -36,7 +36,7 @@
       case 'tomas':
         $sql = "SELECT idToma FROM tomas ORDER BY idToma DESC LIMIT 1";
         break;
-      case 'regs':
+      case 'registros':
         $sql = "SELECT idReg FROM registros ORDER BY idReg DESC LIMIT 1";
         break;
       default:
@@ -56,7 +56,7 @@
       } 
       mysqli_close($link);
 
-      echo json_encode(array("last:" => intval($rows[0])));
+      echo json_encode(array("last" => intval($rows)));
     } else {
       http_response_code(500);
       die("NOK; Database error");  
